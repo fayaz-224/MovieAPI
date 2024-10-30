@@ -5,6 +5,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+//we can use this approach or else we can create individual Exception classes like EmptyFileException
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

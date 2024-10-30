@@ -32,9 +32,16 @@ public class FileController {
     }
 
     @GetMapping(value = "/{fileName}")
-    public void serveFileHandler(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+    public void getFileHandler(@PathVariable String fileName, HttpServletResponse response) throws IOException {
         InputStream resourceFile = fileService.getResourceFile(path, fileName);
-        response.setContentType(MediaType.IMAGE_PNG_VALUE);
-        StreamUtils.copy(resourceFile, response.getOutputStream());
+        if (resourceFile != null) {
+            response.setContentType(MediaType.IMAGE_PNG_VALUE);
+            StreamUtils.copy(resourceFile, response.getOutputStream());
+            resourceFile.close(); // Good practice to close streams when done.
+            response.getOutputStream().flush(); // Ensure all data is written out.
+            response.getOutputStream().close(); // Close to free resources.
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

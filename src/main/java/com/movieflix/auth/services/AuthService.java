@@ -1,11 +1,11 @@
 package com.movieflix.auth.services;
 
 import com.movieflix.auth.entities.User;
-import com.movieflix.auth.entities.UserRole;
+import com.movieflix.auth.entities.UserRoleEnum;
 import com.movieflix.auth.repositories.UserRepository;
-import com.movieflix.auth.utils.AuthResponse;
-import com.movieflix.auth.utils.LoginRequest;
-import com.movieflix.auth.utils.RegisterRequest;
+import com.movieflix.auth.dto.AuthResponse;
+import com.movieflix.auth.dto.LoginRequest;
+import com.movieflix.auth.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,12 +29,12 @@ public class AuthService {
                 .email(registerRequest.getEmail())
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(UserRole.USER)
+                .role(UserRoleEnum.USER)
                 .build();
 
         User savedUser = userRepository.save(user);
         var accessToken = jwtService.generateToken(savedUser);
-        var refreshToken = refreshTokenService.createRefreshToken(savedUser.getEmail());
+        var refreshToken = refreshTokenService.createRefreshToken(savedUser.getUsername());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
@@ -42,17 +42,14 @@ public class AuthService {
                 .build();
     }
 
+
     public AuthResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                        )
-        );
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        var user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         var accessToken = jwtService.generateToken(user);
-        var refreshToken = refreshTokenService.createRefreshToken(loginRequest.getEmail());
+        var refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)

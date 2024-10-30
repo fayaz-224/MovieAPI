@@ -18,8 +18,8 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer movieId;
 
-    @Column(nullable = false, length = 200)
-    @NotBlank(message = "Please provide movie's title!")
+    @Column(nullable = false, length = 200)  //means this column should be null and length should be within 200 chars
+    @NotBlank(message = "Please provide movie's title!")   //Also this should not be empty
     private String title;
 
     @Column(nullable = false)
@@ -30,8 +30,8 @@ public class Movie {
     @NotBlank(message = "Please provide movie's studio!")
     private String studio;
 
-    @ElementCollection
-    @CollectionTable(name = "movie_cast")
+    @ElementCollection  //A separate table will be created and FK is mapped to movieId
+    @CollectionTable(name = "movie_cast")  //Name of this table
     private Set<String> movieCast;
 
     @Column(nullable = false)

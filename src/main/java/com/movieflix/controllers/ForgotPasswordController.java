@@ -2,13 +2,14 @@ package com.movieflix.controllers;
 
 import com.movieflix.auth.entities.ForgotPassword;
 import com.movieflix.auth.entities.User;
-import com.movieflix.auth.repositories.ForgotPasswordRepository;
+import com.movieflix.repositories.ForgotPasswordRepository;
 import com.movieflix.auth.repositories.UserRepository;
-import com.movieflix.auth.utils.ChangePassword;
+import com.movieflix.dto.ChangePassword;
 import com.movieflix.dto.MailBody;
 import com.movieflix.service.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,7 @@ public class ForgotPasswordController {
 
     private final UserRepository userRepository;
     private final EmailService emailService;
-
     private final ForgotPasswordRepository forgotPasswordRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     public ForgotPasswordController(UserRepository userRepository, EmailService emailService, ForgotPasswordRepository forgotPasswordRepository, PasswordEncoder passwordEncoder) {
@@ -36,32 +35,40 @@ public class ForgotPasswordController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-    // send mail for email verification
-    @PostMapping("/verifyMail/{email}")
+    //Send OTP
+    @PostMapping("/sendMail/{email}")
     public ResponseEntity<String> verifyEmail(@PathVariable String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Please provide an valid email!" + email));
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Please provide an valid email!" + email));
 
-        int otp = otpGenerator();
-        MailBody mailBody = MailBody.builder()
-                .to(email)
-                .text("This is the OTP for your Forgot Password request : " + otp)
-                .subject("OTP for Forgot Password request")
-                .build();
+            int otp = otpGenerator();
+            MailBody mailBody = MailBody.builder()
+                    .to(email)
+                    .text("This is the OTP for your Forgot Password request : " + otp)
+                    .subject("Forgot Password request")
+                    .build();
 
-        ForgotPassword fp = ForgotPassword.builder()
-                .otp(otp)
-                .expirationTime(new Date(System.currentTimeMillis() + 20 * 1000))
-                .user(user)
-                .build();
+            ForgotPassword fp = ForgotPassword.builder()
+                    .otp(otp)
+                    .expirationTime(new Date(System.currentTimeMillis() + 300 * 1000))
+                    .user(user)
+                    .build();
 
-        emailService.sendSimpleMessage(mailBody);
-        forgotPasswordRepository.save(fp);
+            emailService.sendSimpleMessage(mailBody);
+            forgotPasswordRepository.save(fp);
 
-        return ResponseEntity.ok("Email sent for verification!");
+            return ResponseEntity.ok("Email sent for verification!");
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (MailException e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Failed to send email: " + e.getMessage());
+        } catch (Exception x) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + x.getMessage());
+        }
     }
 
+    //Validate OTP
     @PostMapping("/verifyOtp/{otp}/{email}")
     public ResponseEntity<String> verifyOtp(@PathVariable Integer otp, @PathVariable String email) {
         User user = userRepository.findByEmail(email)
@@ -71,14 +78,14 @@ public class ForgotPasswordController {
                 .orElseThrow(() -> new RuntimeException("Invalid OTP for email: " + email));
 
         if (fp.getExpirationTime().before(Date.from(Instant.now()))) {
-            forgotPasswordRepository.deleteById(fp.getFpid());
+            forgotPasswordRepository.deleteById(fp.getFpId());
             return new ResponseEntity<>("OTP has expired!", HttpStatus.EXPECTATION_FAILED);
         }
 
         return ResponseEntity.ok("OTP verified!");
     }
 
-
+    //Once OTP verified, change the password
     @PostMapping("/changePassword/{email}")
     public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
                                                         @PathVariable String email) {

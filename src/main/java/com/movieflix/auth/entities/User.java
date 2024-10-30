@@ -3,6 +3,7 @@ package com.movieflix.auth.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @NotBlank(message = "The name field can't be blank")
+    @NotBlank(message = "The name field can't be blank")  //validations - from Jakarta
     private String name;
 
     @NotBlank(message = "The username field can't be blank")
@@ -40,17 +41,17 @@ public class User implements UserDetails {
     private String email;
 
     @NotBlank(message = "The password field can't be blank")
-    @Size(min = 5, message = "The password must have at least 5 characters")
+    @Size(min = 4, message = "The password must have at least 5 characters")
     private String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user")  //user is the name given in RefreshToken for mapping variable
     private RefreshToken refreshToken;
 
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRoleEnum role;
 
 
     @Override
@@ -65,7 +66,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

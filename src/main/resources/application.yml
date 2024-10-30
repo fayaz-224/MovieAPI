@@ -2,14 +2,17 @@ spring:
   datasource:
     username: root
     password: 1234
-    url: jdbc:mysql://localhost:3306/movies
+    url: jdbc:h2:mem:movieApiDB  # H2 database
   jpa:
+    #show-sql: true
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update  # Automatically update the schema on startup
     properties:
       hibernate:
         format_sql: true
+  h2:
+    console:
+      enabled: true  # Enable the H2 console under /h2-console
   servlet:
     multipart:
       max-file-size: 10MB
@@ -17,12 +20,12 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "your_mail"
-    password: "your code"
+    username: fayaz.sk224@gmail.com
+    password: ycwinezdqjochdro  # App Password
     properties:
       mail:
         smtp:
-          auth: true
+          auth: true   # Enable authentication
           starttls:
             enable: true
 
@@ -30,4 +33,4 @@ project:
   poster: posters/
 
 base:
-  url: "http://localhost:8080"
+  url: http://localhost:8080

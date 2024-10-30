@@ -6,7 +6,6 @@ import com.movieflix.dto.MovieDto;
 import com.movieflix.dto.MoviePageResponse;
 import com.movieflix.exceptions.EmptyFileException;
 import com.movieflix.service.MovieService;
-import com.movieflix.utils.AppConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,16 +25,20 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/add-movie")
+    //@PreAuthorize("hasAuthority('ADMIN')")  //only user with ADMIN role can add new Movies
+    @PostMapping("/addMovie")
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart MultipartFile file,
-                                                    @RequestPart String movieDto) throws IOException, EmptyFileException {
+                                                    @RequestPart String movieDto) throws EmptyFileException {
 
-        if (file.isEmpty()) {
+        if (file.isEmpty())
             throw new EmptyFileException("File is empty! Please send another file!");
+
+        try {
+            MovieDto dto = convertToMovieDto(movieDto);
+            return new ResponseEntity<>(movieService.addMovie(dto, file), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MovieDto());
         }
-        MovieDto dto = convertToMovieDto(movieDto);
-        return new ResponseEntity<>(movieService.addMovie(dto, file), HttpStatus.CREATED);
     }
 
     @GetMapping("/{movieId}")
@@ -43,16 +46,12 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovie(movieId));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<MovieDto>> getAllMoviesHandler() {
-        return ResponseEntity.ok(movieService.getAllMovies());
-    }
-
     @PutMapping("/update/{movieId}")
     public ResponseEntity<MovieDto> updateMovieHandler(@PathVariable Integer movieId,
                                                        @RequestPart MultipartFile file,
                                                        @RequestPart String movieDtoObj) throws IOException {
-        if (file.isEmpty()) file = null;
+        if (file.isEmpty())  file = null;
+
         MovieDto movieDto = convertToMovieDto(movieDtoObj);
         return ResponseEntity.ok(movieService.updateMovie(movieId, movieDto, file));
     }
@@ -62,24 +61,28 @@ public class MovieController {
         return ResponseEntity.ok(movieService.deleteMovie(movieId));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<MovieDto>> getAllMoviesHandler() {
+        return ResponseEntity.ok(movieService.getAllMovies());
+    }
+
     @GetMapping("/allMoviesPage")
     public ResponseEntity<MoviePageResponse> getMoviesWithPagination(
-            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize
-    ) {
-        return ResponseEntity.ok(movieService.getAllMoviesWithPagination(pageNumber, pageSize));
+            @RequestParam(defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(defaultValue = "3", required = false) Integer pageSize) {
+            return ResponseEntity.ok(movieService.getAllMoviesWithPagination(pageNumber, pageSize));
     }
 
     @GetMapping("/allMoviesPageSort")
     public ResponseEntity<MoviePageResponse> getMoviesWithPaginationAndSorting(
-            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
-            @RequestParam(defaultValue = AppConstants.SORT_DIR, required = false) String dir
-    ) {
+            @RequestParam(defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(defaultValue = "3", required = false) Integer pageSize,
+            @RequestParam(defaultValue = "movieId", required = false) String sortBy,
+            @RequestParam(defaultValue = "asc", required = false) String dir) {
         return ResponseEntity.ok(movieService.getAllMoviesWithPaginationAndSorting(pageNumber, pageSize, sortBy, dir));
     }
 
+    //deserialization
     private MovieDto convertToMovieDto(String movieDtoObj) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(movieDtoObj, MovieDto.class);

@@ -1,4 +1,4 @@
-package com.movieflix.auth.utils;
+package com.movieflix.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,5 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
 
     private String accessToken;
-
     private String refreshToken;
-
 }

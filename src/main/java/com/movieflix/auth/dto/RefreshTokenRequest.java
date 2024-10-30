@@ -1,4 +1,4 @@
-package com.movieflix.auth.utils;
+package com.movieflix.auth.dto;
 
 import lombok.Data;
 

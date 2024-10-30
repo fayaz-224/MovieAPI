@@ -1,0 +1,42 @@
+[
+  {
+    "movieId": 1,
+    "title": "Avengers: Infinity War",
+    "director" : "Russo Brothers",
+    "studio": "Marvel Studios",
+    "movieCast" : ["RDJ", "Chris Evans", "Scarlett Johansson"],
+    "releaseYear": 2018,
+    "poster": "default.png",
+    "posterUrl" : "url"
+  },
+  {
+    "movieId": 2,
+    "title": "Avengers: End Game",
+    "director" : "Russo Brothers",
+    "studio": "Marvel Studios",
+    "movieCast" : ["RDJ", "Chris Evans"],
+    "releaseYear": 2020,
+    "poster": "default.png",
+    "posterUrl" : "url"
+  },
+  {
+    "movieId": 3,
+    "title": "Animal",
+    "director" : "Sandeep Reddy",
+    "studio": "TSeries",
+    "movieCast" : ["Ranbir", "Rashmika"],
+    "releaseYear": 2023,
+    "poster": "default.png",
+    "posterUrl" : "url"
+  },
+  {
+    "movieId": 4,
+    "title": "Flash",
+    "director" : "Rahul",
+    "studio": "DC",
+    "movieCast" : ["Ezra Miller", "Michael"],
+    "releaseYear": 2024,
+    "poster": "default.png",
+    "posterUrl" : "url"
+  }
+]

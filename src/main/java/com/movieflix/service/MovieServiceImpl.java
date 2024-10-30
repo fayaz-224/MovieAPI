@@ -34,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
     @Value("${base.url}")
     private String baseUrl;
 
+    //Constructor injection
     public MovieServiceImpl(MovieRepository movieRepository, FileService fileService) {
         this.movieRepository = movieRepository;
         this.fileService = fileService;
@@ -42,9 +43,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException {
         // 1. upload the file
-        if (Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
-            throw new FileExistsException("File already exists! Please enter another file name!");
-        }
         String uploadedFileName = fileService.uploadFile(path, file);
 
         // 2. set the value of field 'poster' as filename
@@ -104,33 +102,6 @@ public class MovieServiceImpl implements MovieService {
         );
 
         return response;
-    }
-
-    @Override
-    public List<MovieDto> getAllMovies() {
-        // 1. fetch all data from DB
-        List<Movie> movies = movieRepository.findAll();
-
-        List<MovieDto> movieDtos = new ArrayList<>();
-
-        // 2. iterate through the list, generate posterUrl for each movie obj,
-        // and map to MovieDto obj
-        for(Movie movie : movies) {
-            String posterUrl = baseUrl + "/file/" + movie.getPoster();
-            MovieDto movieDto = new MovieDto(
-                    movie.getMovieId(),
-                    movie.getTitle(),
-                    movie.getDirector(),
-                    movie.getStudio(),
-                    movie.getMovieCast(),
-                    movie.getReleaseYear(),
-                    movie.getPoster(),
-                    posterUrl
-            );
-            movieDtos.add(movieDto);
-        }
-
-        return movieDtos;
     }
 
     @Override
@@ -200,16 +171,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MoviePageResponse getAllMoviesWithPagination(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        Page<Movie> moviePages = movieRepository.findAll(pageable);
-        List<Movie> movies = moviePages.getContent();
+    public List<MovieDto> getAllMovies() {
+        // 1. fetch all data from DB
+        List<Movie> movies = movieRepository.findAll();
 
         List<MovieDto> movieDtos = new ArrayList<>();
 
-        // 2. iterate through the list, generate posterUrl for each movie obj,
-        // and map to MovieDto obj
+        // 2. iterate through the list, generate posterUrl for each movie obj, and map to MovieDto obj
         for(Movie movie : movies) {
             String posterUrl = baseUrl + "/file/" + movie.getPoster();
             MovieDto movieDto = new MovieDto(
@@ -225,6 +193,31 @@ public class MovieServiceImpl implements MovieService {
             movieDtos.add(movieDto);
         }
 
+        return movieDtos;
+    }
+
+    @Override
+    public MoviePageResponse getAllMoviesWithPagination(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Movie> moviePages = movieRepository.findAll(pageable);
+
+        List<MovieDto> movieDtos = new ArrayList<>();
+
+        // 2. iterate through the list, generate posterUrl for each movie obj, and map to MovieDto obj
+        for(Movie movie : moviePages.getContent()) {
+            String posterUrl = baseUrl + "/file/" + movie.getPoster();
+            MovieDto movieDto = new MovieDto(
+                    movie.getMovieId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            movieDtos.add(movieDto);
+        }
 
         return new MoviePageResponse(movieDtos, pageNumber, pageSize,
                                      moviePages.getTotalElements(),
@@ -236,18 +229,15 @@ public class MovieServiceImpl implements MovieService {
     public MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize,
                                                                   String sortBy, String dir) {
         Sort sort = dir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
-                                                                : Sort.by(sortBy).descending();
+                                                           : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-
         Page<Movie> moviePages = movieRepository.findAll(pageable);
-        List<Movie> movies = moviePages.getContent();
 
         List<MovieDto> movieDtos = new ArrayList<>();
 
-        // 2. iterate through the list, generate posterUrl for each movie obj,
-        // and map to MovieDto obj
-        for(Movie movie : movies) {
+        // 2. iterate through the list, generate posterUrl for each movie obj, and map to MovieDto obj
+        for(Movie movie : moviePages.getContent()) {
             String posterUrl = baseUrl + "/file/" + movie.getPoster();
             MovieDto movieDto = new MovieDto(
                     movie.getMovieId(),
@@ -262,12 +252,10 @@ public class MovieServiceImpl implements MovieService {
             movieDtos.add(movieDto);
         }
 
-
         return new MoviePageResponse(movieDtos, pageNumber, pageSize,
                                     moviePages.getTotalElements(),
                                     moviePages.getTotalPages(),
                                     moviePages.isLast());
     }
-
 
 }

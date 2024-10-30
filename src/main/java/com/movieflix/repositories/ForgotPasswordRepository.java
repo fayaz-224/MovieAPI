@@ -1,4 +1,4 @@
-package com.movieflix.auth.repositories;
+package com.movieflix.repositories;
 
 import com.movieflix.auth.entities.ForgotPassword;
 import com.movieflix.auth.entities.User;
