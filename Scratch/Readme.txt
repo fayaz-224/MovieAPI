@@ -1,6 +1,8 @@
 video: https://www.youtube.com/watch?v=dOUhhYe4wpo
 for API collection login to postman
 
+H2 - http://localhost:8080/h2-console/
+
 @RequestPart -  @RequestPart the content of the part is passed through an HttpMessageConverter to resolve the method argument with the 'Content-Type' of the request part in mind. This is analogous to what @RequestBody does to resolve an argument based on the content of a regular request.
                so, we can parse @Requestbody as @RequestPart as "abaghel" and reportData need to be a json file.
 HttpServletResponse - response of server
@@ -22,9 +24,8 @@ http.csrf(AbstractHttpConfigurer::disable)
 
 //DB tables
 SELECT * FROM MOVIE;
-SELECT * FROM USERS;
 SELECT * FROM MOVIE_CAST;
-SELECT * FROM REFRESH_TOKEN;
+SELECT * FROM USERS;
 SELECT * FROM FORGOT_PASSWORD;
 
 

@@ -31,22 +31,16 @@ public class User implements UserDetails {
     @NotBlank(message = "The name field can't be blank")  //validations - from Jakarta
     private String name;
 
-    @NotBlank(message = "The username field can't be blank")
-    @Column(unique = true)
-    private String username;
-
     @NotBlank(message = "The email field can't be blank")
     @Column(unique = true)
     @Email(message = "Please enter email in proper format!")
-    private String email;
+    private String email;  //username
 
     @NotBlank(message = "The password field can't be blank")
     @Size(min = 4, message = "The password must have at least 5 characters")
     private String password;
 
-    @OneToOne(mappedBy = "user")  //user is the name given in RefreshToken for mapping variable
-    private RefreshToken refreshToken;
-
+    //user is the name given in RefreshToken for mapping variable
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
 
@@ -66,7 +60,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

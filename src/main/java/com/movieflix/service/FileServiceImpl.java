@@ -26,7 +26,7 @@ public class FileServiceImpl implements FileService {
         }
 
         // copy the file or upload file to the path - import nio
-        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);   //add StandardCopyOption.REPLACE_EXISTING if u want to ovverride new file which has same name of older files
+        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);   //add StandardCopyOption.REPLACE_EXISTING if u want to override new file with existing files
 
         return fileName;
     }
