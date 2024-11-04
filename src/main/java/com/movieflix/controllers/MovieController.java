@@ -25,7 +25,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    //@PreAuthorize("hasAuthority('ADMIN')")  //only user with ADMIN role can add new Movies
+    @PreAuthorize("hasAuthority('ADMIN')")  //only user with ADMIN role can add new Movies
     @PostMapping("/addMovie")
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart MultipartFile file,
                                                     @RequestPart String movieDto) throws EmptyFileException {

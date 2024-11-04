@@ -1,6 +1,6 @@
 package com.movieflix.auth.config;
 
-import com.movieflix.auth.services.AuthFilterService;
+import com.movieflix.auth.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final AuthFilterService authFilterService;
+    private final JwtAuthFilter authFilterService;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean

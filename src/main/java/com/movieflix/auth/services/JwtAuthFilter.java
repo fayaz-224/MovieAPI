@@ -18,12 +18,12 @@ import java.io.IOException;
 //The AuthFilterService class in the provided code is a custom filter for authentication purposes in a Spring Security context.
 // It extends OncePerRequestFilter, which ensures that the filter logic is executed once per request.
 @Service
-public class AuthFilterService extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public AuthFilterService(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }

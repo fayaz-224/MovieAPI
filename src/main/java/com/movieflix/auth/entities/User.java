@@ -44,13 +44,12 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
 
-    @Enumerated(EnumType.STRING)
-    private UserRoleEnum role;
+    private String role;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override

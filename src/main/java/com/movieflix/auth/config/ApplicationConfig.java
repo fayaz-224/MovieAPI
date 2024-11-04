@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class ApplicationConfig {
+public class ApplicationConfig {  //we can merge this class in SecurityConfiguration class as well
 
     private final UserRepository userRepository;
 
