@@ -33,4 +33,7 @@ SELECT * FROM FORGOT_PASSWORD;
 1. Enable 2FA in gmail
 2. Add App passwords and enter that password in properties file without spaces
 3. To send normal mail use JavaMailSender class
-4. For sending attachments in mail use MineMessage class
+4. For sending attachments in mail use MimeMessage class
+
+
+Note: Mail service is not working in my Office lap

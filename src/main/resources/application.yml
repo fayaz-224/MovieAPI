@@ -22,12 +22,19 @@ spring:
     port: 587
     username: fayaz.sk224@gmail.com
     password: ycwinezdqjochdro  # App Password
+    default-encoding: UTF-8
     properties:
       mail:
         smtp:
+          timeout: 30000  # 30 sec
           auth: true   # Enable authentication
           starttls:
             enable: true
+            required: true
+        mime:
+          charset: UTF
+    verify:
+      host: http://localhost:8080
 
 project:
   poster: posters/
