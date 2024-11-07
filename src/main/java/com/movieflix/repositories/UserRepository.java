@@ -1,6 +1,6 @@
-package com.movieflix.auth.repositories;
+package com.movieflix.repositories;
 
-import com.movieflix.auth.entities.User;
+import com.movieflix.entities.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

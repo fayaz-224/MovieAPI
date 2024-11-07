@@ -1,12 +1,12 @@
 package com.movieflix.controllers;
 
-import com.movieflix.auth.entities.ForgotPassword;
-import com.movieflix.auth.entities.User;
+import com.movieflix.entities.ForgotPassword;
+import com.movieflix.entities.User;
 import com.movieflix.repositories.ForgotPasswordRepository;
-import com.movieflix.auth.repositories.UserRepository;
-import com.movieflix.dto.ChangePassword;
+import com.movieflix.repositories.UserRepository;
+import com.movieflix.dto.ChangePasswordRequest;
 import com.movieflix.dto.MailBody;
-import com.movieflix.service.EmailService;
+import com.movieflix.services.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -87,7 +87,7 @@ public class ForgotPasswordController {
 
     //Once OTP verified, change the password
     @PostMapping("/changePassword/{email}")
-    public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
+    public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePasswordRequest changePassword,
                                                         @PathVariable String email) {
         if (!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
             return new ResponseEntity<>("Please enter the password again!", HttpStatus.EXPECTATION_FAILED);

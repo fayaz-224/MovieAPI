@@ -1,4 +1,4 @@
-package com.movieflix.service;
+package com.movieflix.services;
 
 import com.movieflix.dto.MailBody;
 import jakarta.mail.MessagingException;

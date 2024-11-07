@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movieflix.dto.MovieDto;
 import com.movieflix.dto.MoviePageResponse;
 import com.movieflix.exceptions.EmptyFileException;
-import com.movieflix.service.MovieService;
+import com.movieflix.services.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

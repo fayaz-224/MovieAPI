@@ -1,6 +1,6 @@
-package com.movieflix.auth.config;
+package com.movieflix.config;
 
-import com.movieflix.auth.repositories.UserRepository;
+import com.movieflix.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

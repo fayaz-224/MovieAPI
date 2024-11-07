@@ -1,6 +1,6 @@
-package com.movieflix.auth.config;
+package com.movieflix.config;
 
-import com.movieflix.auth.services.JwtAuthFilter;
+import com.movieflix.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final JwtAuthFilter authFilterService;
+    private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -34,7 +34,7 @@ public class SecurityConfiguration {
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
-            .addFilterBefore(authFilterService, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)  //tells spring to add our custom filter before default ones
             .csrf(AbstractHttpConfigurer::disable)
             .headers(httpSecurityHeadersConfigurer ->
                 httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));  //to resolve localhost refused to connect for h2 DB

@@ -1,4 +1,4 @@
-package com.movieflix.service;
+package com.movieflix.services;
 
 import com.movieflix.dto.MovieDto;
 import com.movieflix.dto.MoviePageResponse;

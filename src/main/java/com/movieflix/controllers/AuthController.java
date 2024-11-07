@@ -1,10 +1,10 @@
 package com.movieflix.controllers;
 
-import com.movieflix.auth.entities.User;
-import com.movieflix.auth.repositories.UserRepository;
-import com.movieflix.auth.dto.LoginRequest;
-import com.movieflix.auth.dto.RegisterRequest;
-import com.movieflix.auth.services.JwtService;
+import com.movieflix.entities.User;
+import com.movieflix.repositories.UserRepository;
+import com.movieflix.dto.LoginRequest;
+import com.movieflix.dto.RegisterRequest;
+import com.movieflix.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,6 +53,7 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         if(auth.isAuthenticated()) {
+            //we can also use userDetailsService to load user
             var user = userRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
             String token = jwtService.generateToken(user);

@@ -1,6 +1,6 @@
 package com.movieflix.controllers;
 
-import com.movieflix.service.FileService;
+import com.movieflix.services.FileService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;

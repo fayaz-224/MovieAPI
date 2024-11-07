@@ -1,4 +1,4 @@
-package com.movieflix.auth.services;
+package com.movieflix.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,7 +1,7 @@
 package com.movieflix.repositories;
 
-import com.movieflix.auth.entities.ForgotPassword;
-import com.movieflix.auth.entities.User;
+import com.movieflix.entities.ForgotPassword;
+import com.movieflix.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,4 +1,4 @@
-package com.movieflix.service;
+package com.movieflix.services;
 
 import org.springframework.web.multipart.MultipartFile;
 
